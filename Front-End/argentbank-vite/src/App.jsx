@@ -1,14 +1,12 @@
 import Header from "./components/Header/Header"
-import Hero from "./components/Hero/Hero"
-import Features from "./components/Features/Features"
 import Footer from "./components/Footer/Footer"
+import HomeContent from "./containers/HomeContent";
 
 const App = () => {
     return (
         <div>
             <Header />
-            <Hero />
-            <Features />
+            <HomeContent />
             <Footer />
         </div>
     );
