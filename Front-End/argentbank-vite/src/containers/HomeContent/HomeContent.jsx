@@ -1,6 +1,6 @@
-import Hero from "../components/Hero/Hero";
-import Feature from "../components/Feature/Feature";
-import featuresData from '../data/features.json';
+import Hero from "../../components/Hero/Hero";
+import Feature from "../../components/Feature/Feature";
+import featuresData from '../../data/features.json';
 
 const HomeContent = () => {
     return (
