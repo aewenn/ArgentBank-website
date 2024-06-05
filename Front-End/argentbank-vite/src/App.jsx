@@ -1,7 +1,8 @@
 import Header from "./components/Header/Header"
 import Footer from "./components/Footer/Footer"
-import HomeContent from "./containers/HomeContent/HomeContent"
-import SignIn from "./containers/SignIn/SignIn"
+import HomeContent from "./pages/HomeContent/HomeContent"
+import SignIn from "./pages/SignIn/SignIn"
+import User from "./components/User/User"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 const App = () => {
@@ -11,7 +12,8 @@ const App = () => {
                 <Header />
                 <Routes>
                     <Route path="/" element={<HomeContent />} />
-                    <Route path="sign-in" element={<SignIn />} />
+                    <Route path="/sign-in" element={<SignIn />} />
+                    <Route path="/user" element={<User />} />
                 </Routes>
                 <Footer />
             </div>

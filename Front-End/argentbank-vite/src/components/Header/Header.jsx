@@ -1,4 +1,4 @@
-import Logo from "../../assets/images/argentBankLogo.png";
+import Logo from "../../assets/images/argentBankLogo.webp";
 import Nav from "../Nav/Nav";
 
 const Header = () => {
