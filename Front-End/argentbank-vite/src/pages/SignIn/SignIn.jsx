@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUser } from "../../redux/reducers/authSlice";
+import { loginUser, UserInfo } from "../../redux/reducers/authSlice";
 
 
 // Etat local pour gérer les données du formulaire
 const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false); // Par défaut, RememberMe n'est pas coché
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -32,23 +32,37 @@ const SignIn = () => {
             }
 
             const userData = await response.json();
-            const token = userData.token; // Obtention du token à partir des données de l'utilisateur
-            dispatch(loginUser({ token: token})); // Dispatch de loginUser pour mettre à jour le store avec le token
+            const token = userData.body.token; // Obtention du token à partir des données de l'utilisateur
+            dispatch(loginUser({ token: token })); // Dispatch de loginUser pour mettre à jour le store avec le token
+            localStorage.setItem('token', token);
+            const userResponse = await fetch("http://localhost:3001/api/v1/user/profile", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+
+            if (userResponse.ok) {
+                const userData = await userResponse.json();
+                dispatch(UserInfo(userData)); // Stocker les informations de l'utilisateur dans le state Redux
+            }
+
             navigate("/user")
         } catch (error) {
             console.log(error); // Erreur si la connexion échoue
         }
     }
 
-    const handleEmailChange = (e) => {
+    const EmailChange = (e) => {
         setEmail(e.target.value); // Met à jour l'état 'email'
     }
 
-    const handlePasswordChange = (e) => {
+    const PasswordChange = (e) => {
         setPassword(e.target.value); // Met à jour l'état 'password'
     }
 
-    const handleRememberMeChange = (e) => {
+    const RememberMeChange = (e) => {
         setRememberMe(e.target.checked); // Met à jour l'état 'rememberme'
     }
 
@@ -59,15 +73,15 @@ const SignIn = () => {
                 <h1>Sign In</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="input-wrapper">
-                        <label htmlFor="username">Username</label>
-                        <input type="text" id="username" value={email} onChange={handleEmailChange} />
+                        <label htmlFor="email">Email</label>
+                        <input type="text" id="email" value={email} onChange={EmailChange} />
                     </div>
                     <div className="input-wrapper">
                         <label htmlFor="password">Password</label>
-                        <input type="password" id="password" value={password} onChange={handlePasswordChange} />
+                        <input type="password" id="password" value={password} onChange={PasswordChange} />
                     </div>
                     <div className="input-remember">
-                        <input type="checkbox" id="remember-me" checked={rememberMe} onChange={handleRememberMeChange} />
+                        <input type="checkbox" id="remember-me" checked={rememberMe} onChange={RememberMeChange} />
                         <label htmlFor="remember-me">Remember me</label>
                     </div>
                     <button type="submit" className="sign-in-button">Sign In</button>

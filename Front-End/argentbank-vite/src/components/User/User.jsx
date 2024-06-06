@@ -1,8 +1,17 @@
+import { useSelector } from 'react-redux';
+
 const User = () => {
+    // Récupérer les informations de l'utilisateur depuis le state Redux
+    const userProfile = useSelector(state => state.auth.userProfile);
+
+    // Afficher le nom d'utilisateur
+    const userName = userProfile && userProfile.body ? userProfile.body.userName : '';
+
+
     return (
         <main className="main bg-dark">
             <div className="header">
-                <h1>Welcome back<br />Tony Jarvis!</h1>
+                <h1>Welcome back<br />{userName}</h1>
                 <button className="edit-button">Edit Name</button>
             </div>
             <h2 className="sr-only">Accounts</h2>

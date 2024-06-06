@@ -13,11 +13,17 @@ body {
     min-height: 100vh;
 }
 
+
+main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 .main {
     flex: 1;
-}
 
-.bg-dark {
-    background-color: #12002b;
+    &.bg-dark {
+        background-color: #12002b;
+    }
 }
-
