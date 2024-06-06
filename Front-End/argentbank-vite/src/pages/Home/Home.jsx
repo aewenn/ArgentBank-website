@@ -2,7 +2,7 @@ import Hero from "../../components/Hero/Hero";
 import Feature from "../../components/Feature/Feature";
 import featuresData from '../../data/features.json';
 
-const HomeContent = () => {
+const Home = () => {
     return (
         <main>
             <Hero />
@@ -22,4 +22,4 @@ const HomeContent = () => {
     );
 };
 
-export default HomeContent;
+export default Home;

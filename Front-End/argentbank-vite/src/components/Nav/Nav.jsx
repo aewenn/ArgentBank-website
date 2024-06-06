@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser } from "../../redux/reducers/authSlice";
 
 const Nav = ({ logoSrc, logoAlt }) => {
 
-    // Initialisation du dispatch pour envoyer des actions Redux
     const dispatch = useDispatch();
-    // Utilisation du sélecteur pour accéder au profil utilisateur depuis le state Redux
+    // On utilise le sélecteur pour accéder au profil utilisateur depuis le state Redux
     const userProfile = useSelector(state => state.auth.userProfile);
 
     const SignOut = () => {
@@ -30,8 +29,10 @@ const Nav = ({ logoSrc, logoAlt }) => {
             <div>
                 {userProfile && userProfile.body ? (
                     <>
+                        <Link to="/user">
+                            {userProfile.body.userName}
+                            <i className="fa fa-user-circle"></i></Link>
                         <NavLink to="/sign-in" className="main-nav-item" onClick={SignOut}>
-                            <i className="fa fa-user-circle"></i>
                             Sign Out
                         </NavLink>
                     </>

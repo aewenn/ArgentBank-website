@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { loginUser, UserInfo } from "../../redux/reducers/authSlice";
 
-
 // Etat local pour gérer les données du formulaire
 const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false); // Par défaut, RememberMe n'est pas coché
+    const [error, setError] = useState(null); // Par défaut, il n'y a pas d'erreur
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -28,13 +28,15 @@ const SignIn = () => {
             });
 
             if (!response.ok) { // On vérifie que la réponse de l'API est ok
-                throw new Error('Failed to sign in'); // Erreur si la connexion échoue
+                throw new Error('Invalid email or password. Please try again.');
             }
 
             const userData = await response.json();
             const token = userData.body.token; // Obtention du token à partir des données de l'utilisateur
             dispatch(loginUser({ token: token })); // Dispatch de loginUser pour mettre à jour le store avec le token
             localStorage.setItem('token', token);
+
+            // Pour rediriger l'utilisateur vers son profil
             const userResponse = await fetch("http://localhost:3001/api/v1/user/profile", {
                 method: 'POST',
                 headers: {
@@ -45,12 +47,11 @@ const SignIn = () => {
 
             if (userResponse.ok) {
                 const userData = await userResponse.json();
-                dispatch(UserInfo(userData)); // Stocker les informations de l'utilisateur dans le state Redux
+                dispatch(UserInfo(userData)); // Stocke les informations de l'utilisateur dans le state Redux
             }
-
             navigate("/user")
         } catch (error) {
-            console.log(error); // Erreur si la connexion échoue
+            setError(error.message);
         }
     }
 
@@ -71,6 +72,7 @@ const SignIn = () => {
             <section className="sign-in-content">
                 <i className="fa fa-user-circle sign-in-icon"></i>
                 <h1>Sign In</h1>
+                {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="input-wrapper">
                         <label htmlFor="email">Email</label>

@@ -8,7 +8,7 @@
 
 /* HomeContent */
 
-@import "./pages/HomeContent/HomeContent.scss";
+@import "./pages/Home/Home.scss";
 
 /* Sign-In */
 
@@ -16,7 +16,8 @@
 
 /* User */
 
-@import "./components/User/User.scss";
+@import "./pages/User/User.scss";
+@import "./components/EditUsername/EditUsername.scss";
 
 /* Footer */ 
 
