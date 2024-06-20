@@ -8,8 +8,7 @@ const initialState = {
 };
 
 // Slice pour gérer l'authentification de l'utilisateur
-
-const authSlice = createSlice({ // 
+const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
@@ -21,22 +20,35 @@ const authSlice = createSlice({ //
     },
 
     // Action pour stocker les informations de l'utilisateur dans le state
-    
+
     UserInfo: (state, action) => {
-    state.userProfile = action.payload;
+      state.userProfile = action.payload;
     },
 
     // Action pour réinitialiser l'état lors de la déconnexion
-
+    
     logoutUser: (state) => {
       state.accessToken = null; // Réinitialisation du token
       state.userProfile = null; // Réinitialisation des informations de l'utilisateur
     },
+
+    // Action pour mettre à jour le nom d'utilisateur
+
+        updateUsername: (state, action) => {
+      state.userProfile = {
+        ...state.userProfile,
+        body: {
+          ...state.userProfile.body,
+          userName: action.payload.userName,
+        },
+      };
+    },
   },
 });
 
-// Export des actions pour les utiliser dans les composants
+export const { loginUser, UserInfo, logoutUser, updateUsername } = authSlice.actions;
 
-export const { loginUser, UserInfo, logoutUser } = authSlice.actions;
+// Pour vérifier que l'utilisateur est connecté
+export const IsConnected = (state) => state.auth.accessToken !== null;
 
 export default authSlice.reducer;
