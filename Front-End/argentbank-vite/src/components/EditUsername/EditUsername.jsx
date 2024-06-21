@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
-import { updateUsername } from '../../redux/reducers/authSlice';
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import PropTypes from "prop-types";
+import useUpdateUserName from "../../hooks/useUpdateUserName";
 
 const EditUsername = ({ onCancel }) => {
-    const dispatch = useDispatch();
+    const { updateUsername, error } = useUpdateUserName(); // Utilisation du hook useUpdateUsername
 
-    // Récupération des infos utilisateur et du token depuis le store Redux
+    // Récupération des infos utilisateur depuis le store Redux
     const userProfile = useSelector(state => state.auth.userProfile);
-    const token = useSelector(state => state.auth.accessToken);
 
     // State local pour gérer le username modifié dans le formulaire
     const [username, setUsername] = useState('');
@@ -23,45 +22,22 @@ const EditUsername = ({ onCancel }) => {
     // Mise à jour du state local "username" avec la nouvelle valeur
     const NewUsername = (e) => setUsername(e.target.value);
 
-    // Modification du username
-    const UpdateUsername = async (e) => {
+    // Envoi du formulaire
+    const SubmitUsername = (e) => {
         e.preventDefault();
-
-        if (!token) {
-            console.error("Token is not defined.");
+        if (username === '') { // Si username est vide, pas de mise à jour
+            console.log("Username cannot be empty.");
             return;
         }
-
-        try {
-            const response = await fetch("http://localhost:3001/api/v1/user/profile", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-                body: JSON.stringify({ userName: username }),
-            });
-
-            const responseData = await response.json();
-            if (!response.ok) {
-                throw new Error("Failed to update username.");
-            }
-
-            // Mise à jour du profil utilisateur dans le store Redux avec le nouveau nom d'utilisateur
-            dispatch(updateUsername({ userName: responseData.body.userName }));
-
-            // Fermeture du formulaire après la mise à jour
-            onCancel();
-
-        } catch (error) {
-            console.error("Error updating username:", error);
-        }
+        // Si username n'est pas vide, mettre à jour
+        updateUsername(username, onCancel);
     };
+
 
     return (
         <section className="sign-in-content" id="edit-username">
             <h1>Edit user info</h1>
-            <form onSubmit={UpdateUsername}>
+            <form onSubmit={SubmitUsername}>
                 <div className="input-wrapper">
                     <label htmlFor="username">User Name :</label>
                     <input
@@ -89,15 +65,18 @@ const EditUsername = ({ onCancel }) => {
                         disabled // Ne peut pas être modifié
                     />
                 </div>
+                {username === '' && (
+                    <p className="error-message">Username cannot be empty.</p> // Message d'erreur si username est vide
+                )}
                 <div className="form_btn">
                     <button type="submit" className="sign-in-button">Save</button>
                     <button type="button" className="sign-in-button" onClick={onCancel}>Cancel</button>
                 </div>
+                {error && <div className="error">{error}</div>}
             </form>
         </section>
     );
 };
-
 
 EditUsername.propTypes = {
     onCancel: PropTypes.func.isRequired,
