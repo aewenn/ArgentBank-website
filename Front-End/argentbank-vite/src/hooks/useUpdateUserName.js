@@ -9,7 +9,7 @@ const useUpdateUserName = () => {
     const token = useSelector(state => state.auth.accessToken);
     const [error, setError] = useState(null); // Pas d'erreur au départ
 
-    const updateUsername = async (username, onCancel) => {
+    const updateUsername = async (username) => {
         if (!token) {
             console.error("Token is not defined.");
             return;
@@ -23,11 +23,12 @@ const useUpdateUserName = () => {
             dispatch(updateUsernameAction({ userName: responseBody.userName }));
 
             // Fermeture du formulaire après la mise à jour
-            onCancel();
+            return responseBody;
             
-        } catch (error) {
-            setError(error.message);
-            console.error("Error updating username:", error);
+        } catch (err) {
+            setError(err.message);
+            console.error("Error updating username:", err);
+            throw new Error(err.message)
         }
     };
 

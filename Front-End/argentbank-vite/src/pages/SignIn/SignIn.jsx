@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSignIn } from "../../hooks/useSignIn";
 import { useGetUserProfile } from "../../hooks/useGetUserProfile";
 import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
-    // Etats
+    // États
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false); // Par défaut, RememberMe n'est pas coché
@@ -14,6 +14,16 @@ const SignIn = () => {
     const { GetUserProfile, error: profileError } = useGetUserProfile(); // Utilisation du hook useGetUserProfile
     const navigate = useNavigate();
 
+    // Récupération et affichage des infos de connexion si l'utilisateur coche "Remember Me"
+    useEffect(() => {
+        const storedEmail = localStorage.getItem('email');
+        const storedRememberMe = localStorage.getItem('rememberMe') === 'true';
+        if (storedEmail && storedRememberMe) {
+            setEmail(storedEmail);
+            setRememberMe(storedRememberMe);
+        }
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -21,6 +31,13 @@ const SignIn = () => {
             if (token) {
                 await GetUserProfile(token); // Récupération du profil utilisateur avec le token obtenu
                 navigate('/user');
+                if (rememberMe) { // Si l'utilisateur coche "Remember Me", on stocke son email et on laisse rememberme coché
+                    localStorage.setItem('email', email);
+                    localStorage.setItem('rememberMe', 'true');
+                } else { // Sinon, on s'assure que ce n'est pas stocké
+                    localStorage.removeItem('email');
+                    localStorage.removeItem('rememberMe');
+                }
             }
         } catch (error) {
             console.error("Error during sign-in", error);

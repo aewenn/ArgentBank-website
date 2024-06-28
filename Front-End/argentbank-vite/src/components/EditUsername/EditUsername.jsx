@@ -30,7 +30,9 @@ const EditUsername = ({ onCancel }) => {
             return;
         }
         // Si username n'est pas vide, mettre à jour
-        updateUsername(username, onCancel);
+        updateUsername(username).then(() => {
+            onCancel();
+        })
     };
 
 

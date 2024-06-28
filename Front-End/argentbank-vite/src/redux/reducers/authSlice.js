@@ -30,6 +30,7 @@ const authSlice = createSlice({
     logoutUser: (state) => {
       state.accessToken = null; // Réinitialisation du token
       state.userProfile = null; // Réinitialisation des informations de l'utilisateur
+      localStorage.removeItem('token');
     },
 
     // Action pour mettre à jour le nom d'utilisateur
