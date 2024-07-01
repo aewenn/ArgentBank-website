@@ -8,7 +8,7 @@ const Nav = ({ logoSrc, logoAlt }) => {
     const isConnected = useSelector(IsConnected);
     const userProfile = useSelector(state => state.auth.userProfile);
 
-    const handleSignOut = () => {
+    const SignOut = () => {
         dispatch(logoutUser());
     };
 
@@ -25,7 +25,7 @@ const Nav = ({ logoSrc, logoAlt }) => {
                             {userProfile && userProfile.body && userProfile.body.userName}
                             <i className="fa fa-user-circle"></i>
                         </Link>
-                        <NavLink to="/sign-in" className="main-nav-item" onClick={handleSignOut}>
+                        <NavLink to="/sign-in" className="main-nav-item" onClick={SignOut}>
                             Sign Out
                         </NavLink>
                     </>
