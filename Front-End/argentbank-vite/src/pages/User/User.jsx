@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import AccountList from "../../components/AccountList/AccountList";
 import EditUsername from "../../components/EditUsername/EditUsername";
+import { useGetUserProfile } from "../../hooks/useGetUserProfile";
 
 const User = () => {
     const [isEditing, setIsEditing] = useState(false);
-
-    // On récupère les informations du profil utilisateur depuis le store Redux
+    const { GetUserProfile, error, isLoading } = useGetUserProfile();
     const userProfile = useSelector(state => state.auth.userProfile);
 
     // On extrait le nom de l'utilisateur du profil
@@ -21,6 +21,25 @@ const User = () => {
     // Pour fermer le formulaire au clic sur Cancel
     const CancelForm = () => {
         setIsEditing(false);
+    };
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                await GetUserProfile();
+            } catch (error) {
+                console.error("Error fetching user profile:", error);
+            }
+        };
+        fetchProfile();
+    }, [GetUserProfile]);
+
+    if (isLoading) {
+        return <p>Loading...</p>;
+    }
+
+    if (error) {
+        return <p>Error: {error}</p>;
     }
 
     return (
@@ -42,3 +61,5 @@ const User = () => {
 };
 
 export default User;
+
+

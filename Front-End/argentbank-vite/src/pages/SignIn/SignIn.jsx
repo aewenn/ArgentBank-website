@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useSignIn } from "../../hooks/useSignIn";
-import { useGetUserProfile } from "../../hooks/useGetUserProfile";
 import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
@@ -11,7 +10,6 @@ const SignIn = () => {
 
     // Hooks
     const { handleSignIn, error: signInError } = useSignIn(); // Utilisation du hook useSignIn
-    const { GetUserProfile, error: profileError } = useGetUserProfile(); // Utilisation du hook useGetUserProfile
     const navigate = useNavigate();
 
     // Récupération et affichage des infos de connexion si l'utilisateur coche "Remember Me"
@@ -29,8 +27,6 @@ const SignIn = () => {
         try {
             const token = await handleSignIn(email, password); // Appel à handleSignIn avec email et password
             if (token) {
-                await GetUserProfile(token); // Récupération du profil utilisateur avec le token obtenu
-                navigate('/user');
                 if (rememberMe) { // Si l'utilisateur coche "Remember Me", on stocke son email et on laisse rememberme coché
                     localStorage.setItem('email', email);
                     localStorage.setItem('rememberMe', 'true');
@@ -38,6 +34,7 @@ const SignIn = () => {
                     localStorage.removeItem('email');
                     localStorage.removeItem('rememberMe');
                 }
+                navigate('/user');
             }
         } catch (error) {
             console.error("Error during sign-in", error);
@@ -61,7 +58,7 @@ const SignIn = () => {
             <section className="sign-in-content">
                 <i className="fa fa-user-circle sign-in-icon"></i>
                 <h1>Sign In</h1>
-                {(signInError || profileError) && <p className="error-message">{signInError || profileError}</p>}
+                {signInError && <p className="error-message">{signInError}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="input-wrapper">
                         <label htmlFor="email">Email</label>
@@ -83,3 +80,4 @@ const SignIn = () => {
 };
 
 export default SignIn;
+
