@@ -24,14 +24,7 @@ const User = () => {
     };
 
     useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                await GetUserProfile();
-            } catch (error) {
-                console.error("Error fetching user profile:", error);
-            }
-        };
-        fetchProfile();
+        GetUserProfile();
     }, [GetUserProfile]);
 
     if (isLoading) {
@@ -45,7 +38,7 @@ const User = () => {
     return (
         <main className="main bg-dark">
             {isEditing ? (
-                <EditUsername onCancel={CancelForm}/>
+                <EditUsername onCancel={CancelForm} />
             ) : (
                 <div className="header">
                     <h1>Welcome back<br />{userName}</h1>

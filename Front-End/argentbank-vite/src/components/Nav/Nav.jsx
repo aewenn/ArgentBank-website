@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser, IsConnected } from "../../redux/reducers/authSlice";
 
@@ -7,9 +7,11 @@ const Nav = ({ logoSrc, logoAlt }) => {
     const dispatch = useDispatch();
     const isConnected = useSelector(IsConnected);
     const userProfile = useSelector(state => state.auth.userProfile);
+    const Navigate = useNavigate();
 
     const SignOut = () => {
         dispatch(logoutUser());
+        Navigate("/");
     };
 
     return (
@@ -25,9 +27,9 @@ const Nav = ({ logoSrc, logoAlt }) => {
                             {userProfile && userProfile.body && userProfile.body.userName}
                             <i className="fa fa-user-circle"></i>
                         </Link>
-                        <NavLink to="/" className="main-nav-item" onClick={SignOut}>
+                        <button className="main-nav-item sign-out-btn" onClick={SignOut}>
                             Sign Out
-                        </NavLink>
+                        </button>
                     </>
                 ) : (
                     <NavLink to="/sign-in" className="main-nav-item">
