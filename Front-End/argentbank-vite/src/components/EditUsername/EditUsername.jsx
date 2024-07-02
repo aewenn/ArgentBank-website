@@ -9,15 +9,17 @@ const EditUsername = ({ onCancel }) => {
     // Récupération des infos utilisateur depuis le store Redux
     const userProfile = useSelector(state => state.auth.userProfile);
 
-    // State local pour gérer le username modifié dans le formulaire
-    const [username, setUsername] = useState('');
+    // Initialiser username avec le nom d'utilisateur actuel s'il existe
+    const initialUsername = userProfile?.body?.userName || '';
+    const [username, setUsername] = useState(initialUsername);
 
     // Mise à jour du username lorsque le profil utilisateur change
     useEffect(() => {
         if (userProfile?.body?.userName) {
             setUsername(userProfile.body.userName);
         }
-    }, [userProfile]);
+    }, [userProfile?.body?.userName]);
+
 
     // Mise à jour du state local "username" avec la nouvelle valeur
     const NewUsername = (e) => setUsername(e.target.value);

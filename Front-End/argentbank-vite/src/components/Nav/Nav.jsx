@@ -25,7 +25,7 @@ const Nav = ({ logoSrc, logoAlt }) => {
                             {userProfile && userProfile.body && userProfile.body.userName}
                             <i className="fa fa-user-circle"></i>
                         </Link>
-                        <NavLink to="/sign-in" className="main-nav-item" onClick={SignOut}>
+                        <NavLink to="/" className="main-nav-item" onClick={SignOut}>
                             Sign Out
                         </NavLink>
                     </>
